@@ -133,7 +133,7 @@ def train(epoch, train_iter, G, Du, Dc, G_optim, Du_optim, Dc_optim, criterion, 
             
     return iters
 
-def test(self, epoch, G, train_data):
+def test(epoch, G, train_data):
     G.eval()
     for idx, (_, attr) in enumerate(train_data):
         if idx > 0:    break
@@ -141,8 +141,10 @@ def test(self, epoch, G, train_data):
         attr = attr.to(device)[rand_idx:rand_idx+1].repeat(100, 1)
         z = torch.randn(100, 128, 1, 1).type(torch.float32).to(device)
         with torch.no_grad():
-            fake_img = G(z, attr)
-        tb.add_images('Generated images %s' % attr.data.cpu()[0], fake_img, global_step=epoch)
+            fake_u, fake_c, _, _ = G(z, attr)
+        tb.add_images('Generated images (uncondition)', fake_u, global_step=epoch)
+        tb.add_images('Generated images (condition) %s' % attr.data.cpu()[0], fake_c, global_step=epoch)
+        
         
 if __name__ == '__main__':
     main()
