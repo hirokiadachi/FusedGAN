@@ -8,7 +8,7 @@ class FusedBlock(nn.Module):
         self.fc = nn.Linear(128, 4*4*1024)
         self.bn1 = nn.BatchNorm1d(4*4*1024)
         
-        self.conv1 = nn.ConvTranspose2d(1024, 512, 5, 2, 0)
+        self.conv1 = nn.ConvTranspose2d(1024, 512, 4, 2, 1)
         self.bn2 = nn.BatchNorm2d(512)
         
         self.relu = nn.ReLU(inplace=True)
@@ -25,23 +25,23 @@ class UnconditionG(nn.Module):
         self.img_size = img_size
         
         # 8x8 --> 16x16
-        self.conv1 = nn.ConvTranspose2d(num_featrues, num_featrues//2, 5, 2, 0)
+        self.conv1 = nn.ConvTranspose2d(num_featrues, num_featrues//2, 4, 2, 1)
         self.bn1 = nn.BatchNorm2d(num_featrues//2)
         
         # 16x16 --> 32x32
-        self.conv2 = nn.ConvTranspose2d(num_featrues//2, num_featrues//4, 5, 2, 0)
+        self.conv2 = nn.ConvTranspose2d(num_featrues//2, num_featrues//4, 4, 2, 1)
         self.bn2 = nn.BatchNorm2d(num_featrues//4)
          
         if img_size == 128:
             # 32x32 --> 64x64
-            self.conv3 = nn.ConvTranspose2d(num_featrues//4, num_featrues//8, 5, 2, 0)
+            self.conv3 = nn.ConvTranspose2d(num_featrues//4, num_featrues//8, 4, 2, 1)
             self.bn3 = nn.BatchNorm2d(num_featrues//8)
             
             # 64x64 --> 128x128
-            self.conv4 = nn.ConvTranspose2d(num_featrues//8, 3, 5, 2, 0)
+            self.conv4 = nn.ConvTranspose2d(num_featrues//8, 3, 4, 2, 1)
         else:
             # 32x32 --> 64x64
-            self.conv3 = nn.ConvTranspose2d(num_featrues//4, 3, 5, 2, 0)
+            self.conv3 = nn.ConvTranspose2d(num_featrues//4, 3, 4, 2, 1)
         
         self.relu = nn.ReLU(inplace=True)
         self.tanh = nn.Tanh()
@@ -89,23 +89,23 @@ class ConditionG(nn.Module):
         self.condition_embedding = Condition_Embedding(num_attr=num_attr)
         
         # 8x8 --> 16x16
-        self.conv1 = nn.ConvTranspose2d(num_featrues+num_attr, num_featrues//2, 5, 2, 0)
+        self.conv1 = nn.ConvTranspose2d(num_featrues+num_attr, num_featrues//2, 4, 2, 1)
         self.bn1 = nn.BatchNorm2d(num_featrues//2)
         
         # 16x16 --> 32x32
-        self.conv2 = nn.ConvTranspose2d(num_featrues//2, num_featrues//4, 5, 2, 0)
+        self.conv2 = nn.ConvTranspose2d(num_featrues//2, num_featrues//4, 4, 2, 1)
         self.bn2 = nn.BatchNorm2d(num_featrues//4)
          
         if img_size == 128:
             # 32x32 --> 64x64
-            self.conv3 = nn.ConvTranspose2d(num_featrues//4, num_featrues//8, 5, 2, 0)
+            self.conv3 = nn.ConvTranspose2d(num_featrues//4, num_featrues//8, 4, 2, 1)
             self.bn3 = nn.BatchNorm2d(num_featrues//8)
             
             # 64x64 --> 128x128
-            self.conv4 = nn.ConvTranspose2d(num_featrues//8, 3, 5, 2, 0)
+            self.conv4 = nn.ConvTranspose2d(num_featrues//8, 3, 4, 2, 1)
         else:
             # 32x32 --> 64x64
-            self.conv3 = nn.ConvTranspose2d(num_featrues//4, 3, 5, 2, 0)
+            self.conv3 = nn.ConvTranspose2d(num_featrues//4, 3, 4, 2, 1)
         
         self.relu = nn.ReLU(inplace=True)
         self.tanh = nn.Tanh()

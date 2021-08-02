@@ -89,7 +89,7 @@ def train(epoch, train_iter, G, Du, Dc, G_optim, Du_optim, Dc_optim, criterion, 
         
         z = torch.randn(targets.size(0), 128, 1, 1).to(device)
         fake_u, fake_c, _, _ = G(z, targets)
-        print(fake_u.size(), fake_c.size())
+        #print(fake_u.size(), fake_c.size())
         
         Du.zero_grad()
         dr_u = Du(inputs)
@@ -120,20 +120,20 @@ def train(epoch, train_iter, G, Du, Dc, G_optim, Du_optim, Dc_optim, criterion, 
         dg_loss_c = criterion(dg_c, flag_real[:targets.size(0)])
         dg_loss = dg_loss_u + dg_loss_c + kl_loss
         dg_loss.backward()
-        G.step()
+        G_optim.step()
         
         iters += 1
         if batch_ind % 100 == 0:
             print('   Epoch: %d (%d iters) | Loss (G): %f | Loss (Du): %f | Loss (Dc): %f | D_KL: %f |'\
-                % (epoch, iters, dg_loss.item(), d_loss_u.item(), d_loss_c.item(), KL_loss.item()))
+                % (epoch, iters, dg_loss.item(), d_loss_u.item(), d_loss_c.item(), kl_loss.item()))
             tb.add_scalars('Total loss', 
                 {'dis_u': d_loss_u, 'dis_c': d_loss_c, 'gen': dg_loss}, 
                 global_step=iters)
-            tb.add_scalar('KL loss', KL_loss.item(), global_step=iters)
+            tb.add_scalar('KL loss', kl_loss.item(), global_step=iters)
             
     return iters
 
-def test(self, G, train_data):
+def test(self, epoch, G, train_data):
     G.eval()
     for idx, (_, attr) in enumerate(train_data):
         if idx > 0:    break
