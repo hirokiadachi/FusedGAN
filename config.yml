@@ -1,0 +1,17 @@
+training:
+    batch_size: 100
+    start_epoch: 0
+    end_epoch: 100
+    lr: 0.0002
+    beta:
+        - 0.5
+        - 0.999
+    weight_decay: 0.0001
+    tb: 'logs'
+    img_size: 128
+    attr_idx:
+        - 20
+        - 15
+        - 31
+        - 16
+        - 5
